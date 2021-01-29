@@ -2,6 +2,14 @@ const webpack = require("webpack");
 const path = require("path");
 const fs = require("fs");
 
+const tmpDir = process.env.TMP_DIR;
+const version = JSON.parse(
+  fs.readFileSync(
+    path.join(tmpDir, "node_modules/@fluentui/react/package.json"),
+    "utf-8"
+  )
+).version;
+
 function getRootComponents(tmpDir) {
   const rootComponents = fs
     .readdirSync(path.join(tmpDir, "node_modules/@fluentui/react/lib"))
@@ -39,7 +47,7 @@ function getPackageExposes() {
 module.exports = {
   entry: {},
   output: {
-    path: path.join(__dirname, "../dist"),
+    path: path.join(__dirname, "../dist", "v" + version),
   },
   cache: false,
   plugins: [
@@ -47,7 +55,7 @@ module.exports = {
       name: "fluentuiReact",
       filename: "remoteEntry.js",
       exposes: {
-        ...getRootComponents(process.env.TMP_DIR),
+        ...getRootComponents(tmpDir),
         "./lib/compat/Button": "@fluentui/react/lib/compat/Button",
         ".": "@fluentui/react/lib/index",
         "./tabs": "@fluentui/react-tabs",

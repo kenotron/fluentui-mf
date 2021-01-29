@@ -1,0 +1,38 @@
+name: Uploading @fluentui/react MF bundle to lading
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */2 * * *"
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          architecture: "x64" # optional, x64 or x86. If not specified, x64 will be used by default
+
+      - run: yarn
+      - run: yarn start
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Upload to blob storage
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            az storage blob upload-batch --account-name lading -d '@fluentui/react' -s dist/
+
+      # Azure logout
+      - name: logout
+        run: |
+          az logout

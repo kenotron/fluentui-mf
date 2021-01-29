@@ -9,10 +9,10 @@ async function main() {
 
   console.log(`Working directory: ${tmpDir}`);
 
-  // if (fs.existsSync(tmpDir)) {
-  //   fs.rmdirSync(tmpDir, { recursive: true });
-  // }
-  // fs.mkdirSync(tmpDir);
+  if (fs.existsSync(tmpDir)) {
+    fs.rmdirSync(tmpDir, { recursive: true });
+  }
+  fs.mkdirSync(tmpDir);
 
   createPackage(tmpDir);
 

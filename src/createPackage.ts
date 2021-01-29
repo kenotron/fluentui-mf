@@ -44,5 +44,9 @@ export function createPackage(tmpDir: string) {
   };
 
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-  execSync("yarn", { cwd: tmpDir, env: process.env, stdio: "inherit" });
+  execSync("yarn --production", {
+    cwd: tmpDir,
+    env: process.env,
+    stdio: "inherit",
+  });
 }
